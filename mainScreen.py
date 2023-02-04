@@ -12,7 +12,6 @@ background = pygame.image.load('src/background.png')
 # surface = pygame.display.set_mode((screen))
         
 
-# run window
 running = True
 while running:
     for event in pygame.event.get():
