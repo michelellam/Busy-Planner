@@ -1,5 +1,6 @@
 import pygame
 import sys
+import json
 
 class main_Screen:
     def __init__(self):
@@ -64,15 +65,61 @@ class main_Screen:
             
 
     def planningScreen(self):
-        self.screen = pygame.display.set_mode((self.width, self.height), self.resizeable)
         self.background = pygame.image.load('assets/planning.png')
-        # self.screen = pygame.transform.smoothscale(self.background, self.screen.get_size())
 
+        self.screen.blit(self.background, (0,0))
+        pygame.display.flip()
+
+        base_font = pygame.font.Font(None, 32)
+        user_text = ''
+
+        input_rect1 = pygame.Rect(600,330,400,50)
+        input_rect2 = pygame.Rect(600,600,400,50)
+
+        color_active = pygame.Color.r
+        color_passive = pygame.Color.g
+        color = color_passive
+        
+        active = False
 
         while self.state == "PLANNING SCREEN":
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-            self.screen.blit(self.background, (0,0))
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if input_rect1.collidepoint(event.pos):
+                        text_surface = base_font.render(user_text, True, (131,115,230))
+                        self.screen.blit(text_surface, (600,350))
+                        input_rect1.w = max(100, text_surface.get_width()+10)
+                        active = True
+                    if input_rect2.collidepoint(event.pos):
+                        text_surface = base_font.render(user_text, True, (131,115,230))
+                        self.screen.blit(text_surface, (100,350))
+                        input_rect2.w = max(100, text_surface.get_width()+10)
+                        active = True
+                    else:
+                        active = False
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_BACKSPACE:
+                        user_text = user_text[:-1]
+                    else:
+                        user_text += event.unicode
+
+            if active:
+                color = color_active
+            else:
+                color = color_passive
+
+            pygame.draw.rect(self.screen, (245,198,229), input_rect1)
+            pygame.draw.rect(self.screen, (245,198,229), input_rect2)
+
+            # text_surface = base_font.render(user_text, True, (131,115,230))
+
+            # self.screen.blit(text_surface, (600,350))
+
+
+            # input_rect2.w = max(100, text_surface.get_width()+10)
+
             pygame.display.flip()
+
