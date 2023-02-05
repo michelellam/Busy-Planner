@@ -13,6 +13,7 @@ class main_Screen:
         self.size = (self.width, self.height)
         self.resizeable = pygame.RESIZABLE
         self.title = pygame.display.set_caption('Busy Planner')
+        self.screen = pygame.display.set_mode((self.width, self.height), self.resizeable)
         # self.screen = pygame.display.set_mode((self.width, self.height), self.resizeable)
         # self.background = pygame.image.load('assets/background.png')
 
@@ -41,11 +42,12 @@ class main_Screen:
 
 
     def startScreen(self):
-        self.screen = pygame.display.set_mode((self.width, self.height), self.resizeable)
+    
         self.background = pygame.image.load('assets/background.png')
         
         start_button = pygame.image.load('assets/start_button.png')
-        start_size = start_button.get_size()
+        quit_button = pygame.image.load('assets/escape_button.png')
+        # start_size = start_button.get_size()
         # rect = start_button.get_rect()
         # rect = pygame.draw.rect(self.screen,(0, 0, 255),(400, 0, 475, 600))
 
@@ -58,10 +60,13 @@ class main_Screen:
                 if event.type == pygame.MOUSEBUTTONDOWN :
                     if mouse[0] > 478 and mouse[0] < 995 and mouse[1] > 403 and mouse[1] < 545:
                         self.state = "PLANNING SCREEN"
-                if event.type == pygame.QUIT:
+                    if mouse[0] > 21 and mouse[0] < 230 and mouse[1] > 21 and mouse[1] < 108:
+                        sys.exit(0)
+                if (event.type == pygame.QUIT):
                     sys.exit(0)
             self.screen.blit(self.background, (0,0))
             self.screen.blit(start_button, (475,400))
+            self.screen.blit(quit_button, (20,20))
             pygame.display.flip()
 
             
@@ -70,7 +75,7 @@ class main_Screen:
         self.background = pygame.image.load('assets/planning.png')
 
         enter_button = pygame.image.load('assets/enterButton3.png')
-        enter_size = enter_button.get_size()
+        # enter_size = enter_button.get_size()
 
         
         self.screen.blit(self.background, (0,0))
@@ -190,13 +195,41 @@ class main_Screen:
     # events.append(self.text_strings)
 
     def lastScreen(self):
+        #f = open('stuff.json')
+        #data = json.load(f)
+
+        #for i in data['stuff']:
+            #print (i)
+        #f.close()
+        #thing_font = pygame.font.SysFont(None,30)
+
         self.background = pygame.image.load('assets/thirdscreen.png')
-        
-        
+        self.tomorrow_button = pygame.image.load('assets/plan_tomorrow.png')
+
+        # pygame.font.Font("assets/Baby Mermaid.tff", 20)
         while self.state == "LAST SCREEN" :
+            mouse = pygame.mouse.get_pos() #550, 630 -- 910,720
+            font = pygame.font.Font("assets/Baby Mermaid.otf", 80)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    sys.exit(0)
-            self.screen.blit(self.background, (0,0))
-            pygame.display.flip()
+                    sys.quit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if mouse[0] > 550 and mouse[0] < 910 and mouse[1] > 630 and mouse[1] < 730:
+                        self.state = "START SCREEN"
 
+                                                #white         #font?
+            text1 = font.render('Red Chili Restaurant @ 10AM', True, (93,133,160), (253, 219, 209))
+            text2 = font.render('Wegmans @ 6PM', True, (93,133,160), (253, 219, 209))
+            text3 = font.render('Target @ 7PM', True, (93,133,160), (253, 219, 209))
+
+            self.screen.blit(self.background, (0,0))
+            self.screen.blit(text1, (500,240))
+            self.screen.blit(text2, (700,360))
+            self.screen.blit(text3, (725,490))
+
+    
+            self.screen.blit(self.tomorrow_button, (550, 630))
+                #posting_things = thing_font.render(f'data["place"]', False, (255, 255, 255))
+               # self.screen.blit(posting_things, ( 200, 200))
+            
+            pygame.display.flip()
