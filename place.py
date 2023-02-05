@@ -21,7 +21,7 @@ def perfectHours(available, busy):
                 
     return available
 
-def changeTime(time):
+def getTime(time):
     if(time == 24):
         return (str(time) + " AM")
     elif(time > 12):
@@ -106,14 +106,14 @@ def main():
         
         combined_list = []
         combined_list = perfect_hours1 + perfect_hours2 + perfect_hours3 # hrs avail for both priorities
-        
+
         frequency = {}
         for item in combined_list:
             if (item in frequency):
                 frequency[item] += 1
             else:
                 frequency[item] = 1
-        
+
         p1_dict = {}
         for k in perfect_hours1:
             p1_dict[k] = frequency[k]
@@ -122,7 +122,7 @@ def main():
         final_data = {}
 
         p1_least_FINAL = min(p1_dict, key=p1_dict.get) # FINAL VALUE FOR P1 (if 9 then 9-10am kinda vibe)
-        final_data[place1] = changeTime(p1_least_FINAL)
+        p1_final = getTime(p1_least_FINAL)
 
         combined_list.remove(p1_least_FINAL) #remove picked priority 1 time
         
@@ -132,16 +132,16 @@ def main():
                 new_frequency[item] += 1
             else:
                 new_frequency[item] = 1
-        
+
         p2_dict = {}
         for m in perfect_hours2:
             p2_dict[m] = new_frequency[m]
 
         p2_least_FINAL = min(p2_dict, key=p2_dict.get) # FINAL VALUE FOR P2 (if 9 then 9-10am kinda vibe)
-        final_data[place2] = changeTime(p2_least_FINAL)
+        p2_final = getTime(p2_least_FINAL)
 
         combined_list.remove(p2_least_FINAL) #remove picked priority 1 time
-        
+
         new2_frequency = {}
         for item in combined_list:
             if (item in new2_frequency):
@@ -154,11 +154,12 @@ def main():
             p3_dict[y] = new2_frequency[y]
 
         p3_least_FINAL = min(p3_dict, key=p3_dict.get) # FINAL VALUE FOR P3 (if 9 then 9-10am kinda vibe)
-        final_data[place3] = changeTime(p3_least_FINAL)
+        p3_final = getTime(p3_least_FINAL)
 
-
-        output = open("final_times.json", "w")
-        json.dump(final_data, output, indent = 3)
+        dic_place = {place1: p1_final, place2: p2_final, place3: p3_final}
+        
+        output = open("output.json", "w")
+        json.dump(dic_place, output, indent = 3)
         output.close()
                 
     except:
