@@ -1,5 +1,6 @@
 from busy import Get_Busy
 import datetime
+import json
 
 def openClose(open, close):
     list = []
@@ -20,14 +21,14 @@ def perfectHours(available, busy):
                 
     return available
 
-def changeTime(place, time):
+def changeTime(time):
     if(time == 24):
-        print(place, ": ", time, " AM")
+        return (str(time) + " AM")
     elif(time > 12):
         time -= 12
-        print(place, ": ", time, " PM")
+        return (str(time), " PM")
     else:
-        print(place, ": ", time, " AM")
+        return (str(time), " AM")
 
 def main():
     try:
@@ -117,9 +118,11 @@ def main():
         for k in perfect_hours1:
             p1_dict[k] = frequency[k]
         
-        p1_least_FINAL = min(p1_dict, key=p1_dict.get) # FINAL VALUE FOR P1 (if 9 then 9-10am kinda vibe)
 
-        changeTime(place1, p1_least_FINAL)
+        final_data = {}
+
+        p1_least_FINAL = min(p1_dict, key=p1_dict.get) # FINAL VALUE FOR P1 (if 9 then 9-10am kinda vibe)
+        final_data[place1] = changeTime(p1_least_FINAL)
 
         combined_list.remove(p1_least_FINAL) #remove picked priority 1 time
         
@@ -135,7 +138,7 @@ def main():
             p2_dict[m] = new_frequency[m]
 
         p2_least_FINAL = min(p2_dict, key=p2_dict.get) # FINAL VALUE FOR P2 (if 9 then 9-10am kinda vibe)
-        changeTime(place2, p2_least_FINAL)
+        final_data[place2] = changeTime(p2_least_FINAL)
 
         combined_list.remove(p2_least_FINAL) #remove picked priority 1 time
         
@@ -151,7 +154,12 @@ def main():
             p3_dict[y] = new2_frequency[y]
 
         p3_least_FINAL = min(p3_dict, key=p3_dict.get) # FINAL VALUE FOR P3 (if 9 then 9-10am kinda vibe)
-        changeTime(place3, p3_least_FINAL)
+        final_data[place3] = changeTime(p3_least_FINAL)
+
+
+        output = open("final_times.json", "w")
+        json.dump(final_data, output, indent = 3)
+        output.close()
                 
     except:
         print("Error")
